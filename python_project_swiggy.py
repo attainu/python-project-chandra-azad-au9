@@ -253,9 +253,10 @@ class OrderMeal:
             print("********SORRY WE ARE NOT ACCEPTING MORE ORDER PLEASE TRY AFTER SOME TIME********")
             OrderMeal.orderFood(self)
         input_check1 = []
-        print("*."*80)
+        print(".*."*100)
         print("="*79)
         print("-"*40,res,"-"*40)
+        print("\n"*2)
         print("MEAL"," "*70, "PRICE", "\n"*3)
         k = 0
         for i, j in menu_restaurent.items():
@@ -274,6 +275,10 @@ class OrderMeal:
         elif dish_input.upper() == 'V': 
             if food_list != [] and price_list != []:
                 OrderMeal.cart(self,food_list,price_list,quantity_list,res)
+            else:
+                print("YOUR CART IS EMPTY")
+                print("="*70)
+                OrderMeal.resturantMenu(self,res,food_list, price_list, quantity_list)
         elif dish_input != "V" or dish_input != "R" or dish_input != "M":
             for i in dish_input:
                 if ord(i) >= 48 and ord(i) <= 57:
