@@ -239,8 +239,12 @@ class OrderMeal:
                 except ValueError:
                     print("NO VALID INPUT!! PLEASE TRY AGAIN ...")
             if l != []:
-                OrderMeal.resturantMenu(self,l[search_menu_input-1],[],[],[])
-                break
+                try:           
+                    OrderMeal.resturantMenu(self,l[search_menu_input-1],[],[],[])
+                    break
+                except IndexError:
+                    print("wrong input please enter correct input ")
+                    OrderMeal.search_Menu(self)
             else:
                 print("\n" + "ENTERED DISH (",dish,") NOT FOUND. TRY AGAIN!",sep='')
         
