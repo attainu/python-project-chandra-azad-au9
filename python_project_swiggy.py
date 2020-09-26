@@ -90,7 +90,11 @@ class Service:
 
     def SignIn(self):
         print("*"*70)
-        res_name = input("ENTER YOUR RESTURANT NAME----  ")
+        res_name = input("ENTER YOUR RESTURANT NAME----  ").upper()
+        Service.display_menu(self,res_name)
+        
+        
+    def display_menu(self,res_name):
         if res_name in menu_restaurent:
             print(" "*30,"MENU OF HOTEL ",res_name)
             print("-"*70)
@@ -101,11 +105,17 @@ class Service:
                 i += 1
                 print("(",i,")"," ",k,"\t"*7,v,sep="")
             print("-"*89)
-            print("(A) ADD NEW DISH","\t"*2,"(M) BACK TO MAIN MENU","\t"*2)
+            print(""(A) ADD NEW DISH","\t"*2,"(M) BACK TO MAIN MENU","\t"*2,"(U) UPDATE PRICE","\t"*2)
+            print("(E) EXIT ")
             print("-"*89)
-            update_menu_input = input("PLEASE ENTER DISH NAME TO BE UPDATED OR SELECT ANY OPERATION TO BE PERFORMED: ")
+            update_menu_input = input("PLEASE SELECT ANY OPERATION TO BE PERFORMED: ")
             if update_menu_input.upper() == "M":
                 Swiggy.mainMenu(self)
+            elif update_menu_input.upper() == "U": #CHANGE
+                Service.Update_price(self,res_name)
+            elif update_menu_input.upper() == "E":
+                print("*"*20,"thanking you for using SWIGGY","*"*20)
+                exit()
             elif update_menu_input.upper() == 'A':
                 meal_name1 = input("PLEASE ENTER NAME OF MEAL----  ")
                 meal_price1 = input("PLEASE ENTER THE PRICE FOR YOUR DISH----  ")
@@ -116,16 +126,20 @@ class Service:
                     else:
                         price_check.append("False")
                 if "False" in price_check:
+                  
                     print("WRONG PRICE INPUT PLEASE GIVE CORRECT INPUT")
                     Service.SignIn(self)
                 else:
                     menu_restaurent[res_name][meal_name1] = meal_price1
+            else:
+                print("OOPS!! WRONG INPUT.. PLEASE GIVE CORRECT INPUT")
+                Service.display_menu(self,res_name)
             print("(A) ADD MORE DISH")
             print("(D) DONE WITH UPDATION")
             print("\n"*2)
             sel_input = input("SELECT YOUR OPTION----  ")
             if sel_input.upper() == 'A':
-                Service.SignIn(self)
+                Service.display_menu(self,res_name)
             elif sel_input.upper() == 'D':
                 Swiggy.mainMenu(self)
             else:
@@ -135,6 +149,38 @@ class Service:
         else:
             print("WRONG RESTURANT NAME INPUT PLEASE GIVE CORRECT INPUT")
             Service.SignIn(self)
+
+
+
+
+    def Update_price(self,res_name):   
+        print("-*-"*80,"\n"*2,"#"*90)
+        flag = 0
+        dish = input("ENTER DISH NAME FOR WHICH YOU WANT TO UPDATE THE PRICE ---  ").upper()
+        for i,j in menu_restaurent[res_name].items():
+            if i == dish:
+                print("CURRENT PRICE OF ", dish," IS ",j)
+                try:
+
+                    u_price = int(input("ENTER NEW PRICE ---  "))
+                except ValueError:
+                    print("WRONG INPUT !! PLEASE INPUT CORRECT PRICE ")
+                    Service.Update_price(self,res_name)
+                    break
+                menu_restaurent[res_name][i] = u_price
+                flag = 1
+                break
+        if flag == 0:
+            print("WRONG DISH NAME!! PLEASE ENTER CORRECT DISH ")
+            Service.Update_price(self,res_name)
+        else:
+            print("PRICE IS SUCCESSFULLY UPDATED ")
+            print("#"*120)
+            Service.display_menu(self,res_name)
+
+
+        
+
 
 
 
@@ -153,7 +199,7 @@ class OrderMeal:
         input_check = []
         print("\n"*3)
         print("#"*40," ORDER FOOD ","#"*40)
-        print(" (1) SLECTE OPTION FROM RESTURANTS\n "
+        print(" (1) SELECT OPTION FROM RESTURANTS\n "
         "(2) SEARCH DISH  ")
         print(" (B) BACK ")
         print(" (E) EXIT ")
@@ -378,12 +424,19 @@ class OrderMeal:
         t1 = threading.Thread(target=endHotelProcess,args=(self,res,))
         queueList.append(t1)
         queueList[-1].start()
+        OrderMeal.back_main_menu(self)
+        
+    def back_main_menu(self):
+        
         pay_in = input("PLEASE SELECT YOUR CHOICE-----  ")
         if pay_in.upper() == 'M':
             Swiggy.mainMenu(self)
         elif pay_in.upper() == 'E':
             exit()
-        
+        else:
+            print("WRONG INPUT, PLEASE GIVE CORRECT INPUT")
+            print("\n"*3)
+            OrderMeal.back_main_menu(self)
 
 
 
